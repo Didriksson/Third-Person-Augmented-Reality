@@ -8,9 +8,11 @@ public class PointsModel {
 	LinkedList<Vector3> previousPoints;
 
 
+
 	public PointsModel() {
 		listOfpoints = new LinkedList<Vector3> ();
 		previousPoints = new LinkedList<Vector3> ();
+		listOfpoints.AddLast(new Vector3(-1000,-1000,-1000));
 		listOfpoints.AddLast (new Vector3(16,1,24));
 		listOfpoints.AddLast (new Vector3(55,1,44));
 		listOfpoints.AddLast (new Vector3(44,1,44));
@@ -33,6 +35,7 @@ public class PointsModel {
 		listOfpoints.AddLast (new Vector3(19,1,14));
 		listOfpoints.AddLast (new Vector3(82,1,43));
 		listOfpoints.AddLast (new Vector3(70,1,40));
+		listOfpoints.AddLast (new Vector3(-2000,1,-2000));
 	}
 
 
@@ -56,7 +59,7 @@ public class PointsModel {
 	}
 	
 	public int GetPointNumber() {
-		return previousPoints.Count+1;
+		return previousPoints.Count;
 	}
 
 

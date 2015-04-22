@@ -13,16 +13,37 @@ public class MasterMarkerController : MonoBehaviour {
 	public bool grid; 
 	public int pointsIntervallbeforeToTurnOnGrid = 10;
 	public Font myFont;
-
+	private Timer timer;
+	private List<MeasurePoint> pointMeassure;
 	// Use this for initialization
 	void Awake () {
 		this.model = new PointsModel ();			
-
+		this.pointMeassure = new List<MeasurePoint> ();
 		Screen.orientation = ScreenOrientation.Landscape;
 	}
 
 	void Start() {
 		AddPointToWall ();
+	}
+
+	void Update(){
+		if(Input.GetKeyDown(KeyCode.RightArrow)){
+			NextPoint();
+		}
+		if(Input.GetKeyDown(KeyCode.LeftArrow)){
+			PreviousPoint();
+		}
+
+		if(Input.GetKeyDown(KeyCode.P)){
+			foreach(MeasurePoint m in pointMeassure){
+				SaveMeasureData();
+			}
+		}
+
+		if(Input.GetKeyDown(KeyCode.S)){
+			MeasurePoint m = GetMeasurePointFromList();
+			m.StopMeasure();
+		}
 	}
 
 	public void ReportDetected(Marker marker){
@@ -59,25 +80,64 @@ public class MasterMarkerController : MonoBehaviour {
 	}
 
 	public void NextPoint() {
-		if (activeMarker) {
+		if (activeMarker && model.GetPointNumber () < 21) {
+
+			MeasurePoint previous = GetMeasurePointFromList ();
+			if (previous != null) {
+				Debug.Log ("Next point stop measure");
+				previous.StopMeasure ();
+			}
+
 			model.NextPoint ();
+
+			MeasurePoint newMeasurePoint = GetMeasurePointFromList ();
+			if (newMeasurePoint != null) {
+				Debug.Log ("Next point, new measure");
+				newMeasurePoint.NewMeasure ();
+			} else {
+				Debug.Log ("Does not contain");
+				MeasurePoint mpoint = new MeasurePoint (model.GetCurrentPoint ());
+				mpoint.NewMeasure ();				                                       
+				pointMeassure.Add (mpoint);
+
+			}
+
 			RemoveChildObjects ();
 			activeMarker.EnableRenderer ();
 			AddPointToWall ();
 
-			if(model.GetPointNumber() > 10)
+			if (model.GetPointNumber () > 10)
 				grid = true;
 			else
 				grid = false;
+			}
 
-		} else {
-			StartCoroutine(DisplayTextAmountOfSeconds(3));
-		}
+		if(model.GetPointNumber() == 21)
+			SaveMeasureData();
+		
+
+
 	}
 
+	private MeasurePoint GetMeasurePointFromList(){
+		return pointMeassure.Find (point => point.point.Equals (model.GetCurrentPoint ()));
+	}
 	public void PreviousPoint() {
-		if (activeMarker) {
+		if (activeMarker && model.GetPointNumber() > 1) {
+			MeasurePoint previous = GetMeasurePointFromList();
+			if (previous != null) {
+				previous.StopMeasure();
+			}
+			
 			model.PreviousPoint ();
+
+			MeasurePoint newMeasurePoint = GetMeasurePointFromList();
+			if (newMeasurePoint != null) {
+				Debug.Log("previous point, new measure");
+				newMeasurePoint.NewMeasure();
+			}
+
+
 			RemoveChildObjects ();
 			activeMarker.EnableRenderer ();
 			AddPointToWall ();
@@ -87,8 +147,6 @@ public class MasterMarkerController : MonoBehaviour {
 			else
 				grid = false;
 
-		} else {
-			StartCoroutine(DisplayTextAmountOfSeconds(3));
 		}
 	}
 
@@ -103,7 +161,8 @@ public class MasterMarkerController : MonoBehaviour {
 		pointNumber = model.GetPointNumber ();
 		pX = model.GetCurrentPoint ().x;
 		pY = model.GetCurrentPoint ().z;
-		GUI.Label (new Rect ((Screen.width/100)*5, (Screen.height/100)*5, 100, 50), "Point: " + pointNumber + "\n" + "(" + pX + "," + pY +")");
+		if(pY != -1000 && pY != -2000)
+			GUI.Label (new Rect ((Screen.width/100)*5, (Screen.height/100)*5, 100, 50), "Point: " + pointNumber + "\n" + "(" + pX + "," + pY +")");
 	}
 
 	private void AddPointToWall() {
@@ -132,9 +191,10 @@ public class MasterMarkerController : MonoBehaviour {
 			GameObject instantiatedObj = (GameObject)Instantiate(pointobject, currentPoint, Quaternion.identity);
 			instantiatedObj.gameObject.transform.parent = wall.gameObject.transform;
 			
-			if(m != activeMarker)
-				instantiatedObj.gameObject.GetComponentInChildren<Renderer>().enabled = false;
-			
+			if(m != activeMarker){
+				foreach(Renderer r in instantiatedObj.gameObject.GetComponentsInChildren<Renderer>())
+					r.enabled = false;
+			}
 			wall.gameObject.transform.parent = m.gameObject.transform;
 			wall.gameObject.transform.localScale = previousScale;
 			wall.gameObject.transform.rotation = previousRotation;
@@ -168,12 +228,28 @@ public class MasterMarkerController : MonoBehaviour {
 	
 	private IEnumerator DisplayTextAmountOfSeconds(float seconds){
 		var startTime = Time.time;
-		Debug.Log (startTime);
-		
 		while (Time.time < (startTime + seconds) && !activeMarker) {
 			message = "Cant get next point. No active marker!";
 			yield return null;
 		}
 		message = "";
 	}
+
+	private void SaveMeasureData(){
+		var date = System.DateTime.Now.Month +"-" + System.DateTime.Now.Day+"-" + System.DateTime.Now.Hour +"_"+ System.DateTime.Now.Minute;
+		System.IO.StreamWriter writer = System.IO.File.CreateText (Application.dataPath + "/../Mätningar/Experiment " +  date + ".txt");
+		writer.AutoFlush = true;
+		int pointnumber = 1;
+		foreach(MeasurePoint m in pointMeassure){
+			string[] measures = m.GetMeasures();
+			writer.WriteLine("Punkt: " + pointnumber++);
+			foreach(string s in measures)
+				writer.WriteLine(s);
+		}
+		writer.Close ();
+		Debug.Log("Saved data.");
+
+
+	}
+
 }

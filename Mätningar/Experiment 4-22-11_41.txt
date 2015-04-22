@@ -1,0 +1,41 @@
+Punkt: 1
+Mätning för punkt: (16.0, 1.0, 24.0): 0.8410568
+Punkt: 2
+Mätning för punkt: (55.0, 1.0, 44.0): 0.7595291
+Punkt: 3
+Mätning för punkt: (44.0, 1.0, 44.0): 0.7109857
+Punkt: 4
+Mätning för punkt: (59.0, 1.0, 36.0): 0.5040684
+Punkt: 5
+Mätning för punkt: (6.0, 1.0, 42.0): 0.2035141
+Punkt: 6
+Mätning för punkt: (10.0, 1.0, 9.0): 0.180418
+Punkt: 7
+Mätning för punkt: (1.0, 1.0, 1.0): 0.1673965
+Punkt: 8
+Mätning för punkt: (36.0, 1.0, 48.0): 0.1671791
+Punkt: 9
+Mätning för punkt: (33.0, 1.0, 37.0): 0.3877115
+Punkt: 10
+Mätning för punkt: (76.0, 1.0, 23.0): 0.2022438
+Punkt: 11
+Mätning för punkt: (100.0, 1.0, 45.0): 0.1727142
+Punkt: 12
+Mätning för punkt: (31.0, 1.0, 38.0): 0.1599197
+Punkt: 13
+Mätning för punkt: (33.0, 1.0, 12.0): 0.1176405
+Punkt: 14
+Mätning för punkt: (52.0, 1.0, 26.0): 0.1869183
+Punkt: 15
+Mätning för punkt: (83.0, 1.0, 21.0): 0.1729136
+Punkt: 16
+Mätning för punkt: (52.0, 1.0, 46.0): 0.1711893
+Punkt: 17
+Mätning för punkt: (4.0, 1.0, 4.0): 0.4139566
+Punkt: 18
+Mätning för punkt: (19.0, 1.0, 14.0): 0.6510191
+Punkt: 19
+Mätning för punkt: (82.0, 1.0, 43.0): 0.583148
+Punkt: 20
+Mätning för punkt: (70.0, 1.0, 40.0): 1.288311
+Punkt: 21
